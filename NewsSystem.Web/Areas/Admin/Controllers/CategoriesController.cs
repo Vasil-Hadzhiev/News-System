@@ -1,21 +1,20 @@
 ﻿namespace NewsSystem.Web.Areas.Admin.Controllers
 {
+    using Attributes;
     using Models.BindingModels.Category;
-    using Models.EntityModels;
     using Models.ViewModels.Category;
-    using Web.Attributes;
-    using Services;
+    using Services.Interfaces;
     using System.Collections.Generic;
     using System.Web.Mvc;
 
     [CustomAuthorize(Roles = "admin")]
     public class CategoriesController : AdminController
     {
-        private readonly CategoryService categories;
+        private readonly ICategoryService categories;
 
-        public CategoriesController()
+        public CategoriesController(ICategoryService categories)
         {
-            this.categories = new CategoryService();
+            this.categories = categories;
         }
 
         public ActionResult All()
@@ -38,7 +37,7 @@
             {
                 this.categories.Create(model.Name);
 
-                return RedirectToAction("All");
+                return this.RedirectToAllCategories();
             }
 
             return this.View(model);
@@ -48,21 +47,17 @@
         {
             this.categories.Delete(id);
 
-            return RedirectToAction("All");
+            return this.RedirectToAllCategories();
         }
 
         public ActionResult Edit(int id)
         {
-            Category category = this.Context.Categories.Find(id);
-            if (category == null)
-            {
-                return this.RedirectToAction("All");
-            }
+            EditCategoryBindingModel model = this.categories.GetEditModel(id);
 
-            EditCategoryBindingModel model = new EditCategoryBindingModel
+            if (model == null)
             {
-                Name = category.Name
-            };
+                return this.RedirectToAllCategories();
+            }
 
             return this.View(model);
         }
@@ -73,7 +68,7 @@
         {
             this.categories.Edit(model.Id, model.Name);
 
-            return this.RedirectToAction("All");
+            return this.RedirectToAllCategories();
         }
     }
 }

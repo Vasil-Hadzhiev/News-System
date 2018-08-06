@@ -2,18 +2,18 @@
 {
     using Models.ViewModels.Articles;
     using PagedList;
-    using Services;
+    using Services.Interfaces;
     using System.Collections.Generic;
     using System.Linq;
     using System.Web.Mvc;
 
     public class HomeController : Controller
     {
-        private readonly ArticleService articles;
+        private readonly IArticleService articles;
 
-        public HomeController()
+        public HomeController(IArticleService articles)
         {
-            this.articles = new ArticleService();
+            this.articles = articles;
         }
 
         public ActionResult Index(int? page)

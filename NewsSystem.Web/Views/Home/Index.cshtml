@@ -25,6 +25,7 @@
             @foreach (var article in Model)
             {
                 <tr>
+                    @*<td>@Html.ActionLink(article.Title, "Details", "Articles", new { id = article.Id }, null)</td>*@
                     <td>@article.Title</td>
                     <td>@article.Author</td>
                     <td>

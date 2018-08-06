@@ -1,7 +1,5 @@
 ﻿namespace NewsSystem.Models.EntityModels
 {
-    using System;
-
     public class Like
     {
         public int Id { get; set; }

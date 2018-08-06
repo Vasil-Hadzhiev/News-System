@@ -11,5 +11,9 @@
         }
 
         public NewsSystemDbContext Context { get; set; }
+
+        public ActionResult RedirectToAllArticles() => this.RedirectToAction("All", "Articles");
+
+        public ActionResult RedirectToAllCategories() => this.RedirectToAction("All", "Categories");
     }
 }

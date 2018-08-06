@@ -1,18 +1,20 @@
 ﻿namespace NewsSystem.Services
 {
+    using Interfaces;
+    using NewsSystem.Models.BindingModels.Article;
     using NewsSystem.Models.EntityModels;
     using NewsSystem.Models.ViewModels.Articles;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    public class ArticleService : Service
+    public class ArticleService : Service, IArticleService
     {
         public IEnumerable<ArticlesViewModel> All()
         {
             IEnumerable<ArticlesViewModel> categories = this.Context
                 .Articles
                 .OrderBy(a => a.Category.Name)
+                .ThenByDescending(a => a.Likes.Select(l => l.Value).FirstOrDefault())
                 .Select(a => new ArticlesViewModel
                 {
                     Id = a.Id,
@@ -21,6 +23,19 @@
                 });
 
             return categories;
+        }
+
+        public CreateArticleBindingModel GetCreateModel()
+        {
+            CreateArticleBindingModel model = new CreateArticleBindingModel
+            {
+                Categories = this.Context
+                    .Categories
+                    .Select(c => c.Name)
+                    .ToList()
+            };
+
+            return model;
         }
 
         public void Create(string title, string content, string category, string author)
@@ -49,6 +64,38 @@
             this.Context.SaveChanges();
         }
 
+        public EditArticleBindingModel GetEditModel(int id)
+        {
+            Article article = this.Context
+                .Articles
+                .FirstOrDefault(a => a.Id == id);
+
+            if (article == null)
+            {
+                return null;
+            }
+
+            string categoryName = this.Context
+                .Categories
+                .FirstOrDefault(c => c.Id == article.CategoryId)
+                .Name;
+
+            List<string> categories = this.Context
+                .Categories
+                .Select(c => c.Name)
+                .ToList();
+
+            EditArticleBindingModel model = new EditArticleBindingModel
+            {
+                Title = article.Title,
+                Category = categoryName,
+                Content = article.Content,
+                Categories = categories
+            };
+
+            return model;
+        }
+
         public void Edit(int id, string title, string content, string category)
         {
             Article article = this.Context.Articles.Find(id);
@@ -63,7 +110,7 @@
             this.Context.SaveChanges();
         }
 
-        public ArticleDetailsViewModel DisplayModel(int id)
+        public ArticleDetailsViewModel GetDisplayModel(int id)
         {
             Article article = this.Context
                 .Articles

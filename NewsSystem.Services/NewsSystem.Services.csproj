@@ -62,6 +62,8 @@
   <ItemGroup>
     <Compile Include="ArticleService.cs" />
     <Compile Include="CategoryService.cs" />
+    <Compile Include="Interfaces\IArticleService.cs" />
+    <Compile Include="Interfaces\ICategoryService.cs" />
     <Compile Include="Service.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

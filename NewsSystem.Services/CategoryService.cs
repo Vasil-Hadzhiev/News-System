@@ -1,11 +1,13 @@
 ﻿namespace NewsSystem.Services
 {
+    using Interfaces;
+    using Models.BindingModels.Category;
     using Models.EntityModels;
-    using NewsSystem.Models.ViewModels.Category;
+    using Models.ViewModels.Category;
     using System.Collections.Generic;
     using System.Linq;
 
-    public class CategoryService : Service  
+    public class CategoryService : Service, ICategoryService
     {
         public IEnumerable<CategoriesViewModel> All()
         {
@@ -37,6 +39,24 @@
 
             this.Context.Categories.Remove(category);
             this.Context.SaveChanges();
+        }
+
+        public EditCategoryBindingModel GetEditModel(int id)
+        {
+            Category category = this.Context
+                .Categories
+                .FirstOrDefault(c => c.Id == id);
+            if (category == null)
+            {
+                return null;
+            }
+
+            EditCategoryBindingModel model = new EditCategoryBindingModel
+            {
+                Name = category.Name
+            };
+
+            return model;
         }
 
         public void Edit(int id, string name)

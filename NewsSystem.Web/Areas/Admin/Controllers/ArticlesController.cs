@@ -1,22 +1,19 @@
 ﻿namespace NewsSystem.Web.Areas.Admin.Controllers
 {
+    using Attributes;
     using Models.BindingModels.Article;
-    using Models.EntityModels;
     using Models.ViewModels.Articles;
-    using NewsSystem.Web.Attributes;
-    using Services;
-    using System;
+    using Services.Interfaces;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Web.Mvc;
 
     public class ArticlesController : AdminController
     {
-        private readonly ArticleService articles;
+        private readonly IArticleService articles;
 
-        public ArticlesController()
+        public ArticlesController(IArticleService articles)
         {
-            this.articles = new ArticleService();
+            this.articles = articles;
         }
 
         [CustomAuthorize(Roles = "admin")]
@@ -30,12 +27,9 @@
         [CustomAuthorize(Roles = "admin")]
         public ActionResult Create()
         {
-            ViewBag.Categories = this.Context
-                .Categories
-                .Select(c => c.Name)
-                .ToList();
+            CreateArticleBindingModel model = this.articles.GetCreateModel();
 
-            return this.View();
+            return this.View(model);
         }
 
         [HttpPost]
@@ -49,7 +43,7 @@
             {
                 this.articles.Create(model.Title, model.Content, model.Category, author);
 
-                return RedirectToAction("All");
+                return this.RedirectToAllArticles();
             }
 
             return this.View(model);
@@ -60,37 +54,18 @@
         {
             this.articles.Delete(id);
 
-            return RedirectToAction("All");
+            return this.RedirectToAllArticles();
         }
 
         [CustomAuthorize(Roles = "admin")]
         public ActionResult Edit(int id)
         {
-            Article article = this.Context
-                .Articles
-                .FirstOrDefault(a => a.Id == id);
+            EditArticleBindingModel model = this.articles.GetEditModel(id);
 
-            if (article == null)
+            if (model == null)
             {
-                return this.RedirectToAction("All");
+                return this.RedirectToAllArticles();
             }
-
-            string categoryName = this.Context
-                .Categories
-                .FirstOrDefault(c => c.Id == article.CategoryId)
-                .Name;
-
-            ViewBag.Categories = this.Context
-                .Categories
-                .Select(c => c.Name)
-                .ToList();
-
-            EditArticleBindingModel model = new EditArticleBindingModel
-            {
-                Title = article.Title,
-                Category = categoryName,
-                Content = article.Content
-            };
 
             return this.View(model);
         }
@@ -102,13 +77,13 @@
         {
             this.articles.Edit(model.Id, model.Title, model.Content, model.Category);
 
-            return this.RedirectToAction("All");
+            return this.RedirectToAllArticles();
         }
 
         [Authorize]
         public ActionResult Details(int id)
         {
-            ArticleDetailsViewModel model = this.articles.DisplayModel(id);
+            ArticleDetailsViewModel model = this.articles.GetDisplayModel(id);
 
             return this.View(model);
         }
