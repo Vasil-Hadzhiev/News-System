@@ -266,6 +266,8 @@
     <Content Include="Areas\Admin\Views\Articles\All.cshtml" />
     <Content Include="Areas\Admin\Views\Articles\Create.cshtml" />
     <Content Include="Areas\Admin\Views\Articles\Edit.cshtml" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Views\Shared\Details.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

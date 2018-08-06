@@ -150,7 +150,7 @@
             return model;
         }
 
-        public void Like(int id)
+        public int Like(int id)
         {
             Article article = this.Context
                 .Articles
@@ -176,6 +176,8 @@
             }
       
             this.Context.SaveChanges();
+
+            return like.Value;
         }
     }
 }

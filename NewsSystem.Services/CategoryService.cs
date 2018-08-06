@@ -24,13 +24,20 @@
 
         public void Create(string name)
         {
-            Category category = new Category
-            {
-                Name = name
-            };
+            bool exists = this.Context
+                .Categories
+                .Any(c => c.Name == name);
 
-            this.Context.Categories.Add(category);
-            this.Context.SaveChanges();
+            if (!exists)
+            {
+                Category category = new Category
+                {
+                    Name = name
+                };
+
+                this.Context.Categories.Add(category);
+                this.Context.SaveChanges();
+            }         
         }
 
         public void Delete(int id)

@@ -3,8 +3,10 @@
     using Attributes;
     using Models.BindingModels.Category;
     using Models.ViewModels.Category;
+    using PagedList;
     using Services.Interfaces;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Web.Mvc;
 
     [CustomAuthorize(Roles = "admin")]
@@ -17,11 +19,12 @@
             this.categories = categories;
         }
 
-        public ActionResult All()
+        public ActionResult All(int? page)
         {
             IEnumerable<CategoriesViewModel> allCategories = this.categories.All();
+            IPagedList pagedArticles = allCategories.ToList().ToPagedList(page ?? 1, 5);
 
-            return this.View(allCategories);
+            return this.View(pagedArticles);
         }
 
         public ActionResult Create()

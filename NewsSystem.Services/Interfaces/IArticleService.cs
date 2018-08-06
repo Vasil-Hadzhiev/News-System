@@ -20,6 +20,6 @@
        
         void Edit(int id, string title, string content, string category);      
 
-        void Like(int id);
+        int Like(int id);
     }
 }

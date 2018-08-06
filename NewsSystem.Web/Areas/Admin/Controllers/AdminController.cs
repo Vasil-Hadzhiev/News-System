@@ -3,7 +3,7 @@
     using Data;
     using System.Web.Mvc;
 
-    public class AdminController : Controller
+    public abstract class AdminController : Controller
     {
         public AdminController()
         {

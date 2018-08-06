@@ -3,8 +3,10 @@
     using Attributes;
     using Models.BindingModels.Article;
     using Models.ViewModels.Articles;
+    using PagedList;
     using Services.Interfaces;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Web.Mvc;
 
     public class ArticlesController : AdminController
@@ -17,11 +19,12 @@
         }
 
         [CustomAuthorize(Roles = "admin")]
-        public ActionResult All()
+        public ActionResult All(int? page)
         {
             IEnumerable<ArticlesViewModel> allArticles = this.articles.All();
+            IPagedList pagedArticles = allArticles.ToList().ToPagedList(page ?? 1, 5);
 
-            return this.View(allArticles);
+            return this.View(pagedArticles);
         }
 
         [CustomAuthorize(Roles = "admin")]
@@ -85,15 +88,19 @@
         {
             ArticleDetailsViewModel model = this.articles.GetDisplayModel(id);
 
+            if (model == null)
+            {
+                return this.RedirectToAllCategories();
+            }
+
             return this.View(model);
         }
 
-
         [Authorize]
-        public ActionResult Like(int id)
+        public int Like(int id)
         {
-            this.articles.Like(id);
-            return this.RedirectToAction("Details", new { id });
+            int value = this.articles.Like(id);
+            return value;
         }
     }
 }

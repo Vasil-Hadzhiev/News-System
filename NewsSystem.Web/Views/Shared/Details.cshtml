@@ -1,4 +1,6 @@
 ﻿@using NewsSystem.Models.ViewModels.Articles
+@using Microsoft.Ajax.Utilities;
+
 @model ArticleDetailsViewModel
 
 @{
@@ -13,41 +15,22 @@
 <p>
     @Model.Content
 </p>
-<div id="likes">
-    Likes: @Model.Likes
-</div>
-@*<button id="like" class="btn btn-primary">Like</button>*@
 
 @Ajax.ActionLink("Like", "Like", "Articles", new { id = Model.Id },
     new AjaxOptions
     {
         UpdateTargetId = "likes",
-        InsertionMode = InsertionMode.Replace,
-        HttpMethod = "GET"
+        InsertionMode = InsertionMode.Replace
+        //HttpMethod = "GET"
     },
     new { @class = "btn btn-primary" })
 
-@*@section Scripts {
-    <script>
-        $(document).ready(function (){
+<div>
+    Likes: <span id="likes">@Model.Likes</span>
+</div>
 
-        $("#like").click(function (){
-
-        let id = $(this).attr("likes");
-
-           $.ajax({
-                   url: '@Url.Action("Like", "Articles")',
-                   data: { "Id": id },
-                   cache: false,
-                   type: "POST",
-                   success: function (result) {
-                       alert("success");
-                   },
-                   error: function (result) { 
-                       alert("failed")
-                   }
-                });
-            });
-        });
-    </script>
-}*@
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.js")
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
+}
