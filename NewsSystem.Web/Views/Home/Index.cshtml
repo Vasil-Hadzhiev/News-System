@@ -1,0 +1,38 @@
+﻿@using NewsSystem.Models.ViewModels.Articles
+@using PagedList
+@using PagedList.Mvc
+
+@model IPagedList<ArticlesViewModel>
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<h1>Articles</h1>
+
+<hr />
+
+@if (Model.Any())
+{
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.First().Title)</th>
+                <th>@Html.DisplayNameFor(model => model.First().Author)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var article in Model)
+            {
+                <tr>
+                    <td>@article.Title</td>
+                    <td>@article.Author</td>
+                    <td>
+                        @Html.ActionLink("Details", "Details", "Articles", new { id = article.Id }, new { @class = "btn btn-info" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+}

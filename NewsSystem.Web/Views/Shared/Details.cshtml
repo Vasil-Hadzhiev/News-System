@@ -1,0 +1,53 @@
+﻿@using NewsSystem.Models.ViewModels.Articles
+@model ArticleDetailsViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h1>Article Title: @Model.Title (@Model.Category)</h1>
+<h3>Article by @Model.Author</h3>
+<hr />
+<h3>Content</h3>
+<p>
+    @Model.Content
+</p>
+<div id="likes">
+    Likes: @Model.Likes
+</div>
+@*<button id="like" class="btn btn-primary">Like</button>*@
+
+@Ajax.ActionLink("Like", "Like", "Articles", new { id = Model.Id },
+    new AjaxOptions
+    {
+        UpdateTargetId = "likes",
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "GET"
+    },
+    new { @class = "btn btn-primary" })
+
+@*@section Scripts {
+    <script>
+        $(document).ready(function (){
+
+        $("#like").click(function (){
+
+        let id = $(this).attr("likes");
+
+           $.ajax({
+                   url: '@Url.Action("Like", "Articles")',
+                   data: { "Id": id },
+                   cache: false,
+                   type: "POST",
+                   success: function (result) {
+                       alert("success");
+                   },
+                   error: function (result) { 
+                       alert("failed")
+                   }
+                });
+            });
+        });
+    </script>
+}*@

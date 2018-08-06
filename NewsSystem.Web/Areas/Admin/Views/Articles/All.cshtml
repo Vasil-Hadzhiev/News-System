@@ -1,0 +1,38 @@
+﻿@using NewsSystem.Models.ViewModels.Articles
+@model IEnumerable<ArticlesViewModel>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>All Articles</h1>
+
+@Html.ActionLink("Create Article", "Create", null, new { @class = "btn btn-success" })
+
+<hr />
+
+@if (Model.Any())
+{
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Title)</th>
+                <th>@Html.DisplayNameFor(model => model.Author)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var article in Model)
+            {
+                <tr>
+                    <td>@article.Title</td>
+                    <td>@article.Author</td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = article.Id }, new { @class = "btn btn-warning" })
+                        @Html.ActionLink("Delete", "Delete", new { id = article.Id }, new { @class = "btn btn-danger" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
